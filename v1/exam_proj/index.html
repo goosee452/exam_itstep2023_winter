@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="1000" height="1000">
+    </canvas>
+    <button id="check" onclick="check()">check</button>
+
+    <script>
+        let keys = {
+            up: false,
+            left: false,
+            down: false,
+            right: false
+        }
+
+        addEventListener('keydown', (event)=>{
+            if(event.key == 'w'){
+                keys.up = true;
+            }
+            if(event.key == 'a'){
+                keys.left = true;
+            }
+            if(event.key == 's'){
+                keys.down = true;
+            }
+            if(event.key == 'd'){
+                keys.right = true;
+            }
+        })
+
+        addEventListener('keyup', (event)=>{
+            if(event.key == 'w'){
+                keys.up = false;
+            }
+            if(event.key == 'a'){
+                keys.left = false;
+            }
+            if(event.key == 's'){
+                keys.down = false;
+            }
+            if(event.key == 'd'){
+                keys.right = false;
+            }
+        })
+
+        function showKeys(){
+            console.log(keys);
+        }
+
+        setInterval(()=>{
+        fetch('http://localhost:2007/keys', {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify(keys)
+        })
+        .then((data)=>{
+            if(data.ok){
+                return data.text();
+            }
+        })
+        .then((data)=>{
+            //console.log(data);
+        })
+        }, 500);
+    </script>
+    <script>
+        function check(){
+            fetch('http://localhost:2007/check', {
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                body: '{}'
+            })
+            .then((data)=>{
+                if(data.ok){
+                    return data.json();
+                }
+            })
+            .then((data)=>{
+                const canv = document.getElementById('canvas');
+                const ctx = canv.getContext('2d');
+                ctx.fillStyle = "rgb(200,0,0)";
+                for(let i = 0; i < data.cav.length; i++){
+                    ctx.fillRect(data.cav[i].x * 10, data.cav[i].y * 10, 10, 10);
+                }
+            })
+        }
+    </script>
+</body>
+</html>
