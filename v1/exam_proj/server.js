@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const Hitbox = require('./hitbox');
+const generateMap = require('./mapGenerator')
 
 
 function writeFiles(request, response, ...file_paths) {
@@ -60,15 +61,21 @@ const server = http.createServer((request, response) => {
         writePage_html('./index.html', response);
     }
     else if(req_url.pathname == '/check'){
-        let a = new Hitbox(150, 0, 150, 1000);
-        let b = new Hitbox(0, 30, 300, 200);
         let data = {
-            hitbox1: a,
-            hitbox2: b,
-            res: a.checkForCollision(b)
+            cav: generateMap(1000, 1000)
         }
+        console.log(data.cav);
         request.on('data', ()=>{
             //....
+        })
+        .on('end', ()=>{
+            response.end(JSON.stringify(data));
+        })
+    }
+    else if(req_url.pathname == '/keys'){
+        let data = '';
+        request.on('data', (chunk)=>{
+            data += chunk;
         })
         .on('end', ()=>{
             response.end(JSON.stringify(data));
