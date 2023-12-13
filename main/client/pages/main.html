@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/main.css" type="text/css">
+</head>
+<body>
+    <h1>Caverns</h1>
+    <h2>First time playing?</h2>
+    <button id="create" onclick="redirect('/create')">Create an account</button>
+    <h2>Already have one?</h2>
+    <button id="signin" onclick="redirect('/signin')">Sign in</button>
+    <script>
+        function redirect(pathname){
+            window.location.pathname = pathname;
+        }
+    </script>
+</body>
+</html>

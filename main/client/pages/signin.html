@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../styles/create.css" type="text/css">
+</head>
+<body>
+    <form action="/signin/try" method="post" id="form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter..." required>
+        <label for="pass">Password:</label>
+        <input type="text" id="pass" name="password" placeholder="Enter..." required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        let form = document.getElementById('form');
+        form.addEventListener('submit', (event)=>{
+            event.preventDefault();
+            let formData = new FormData(form);
+
+            fetch('/signin/try', {
+                method: 'POST',
+                body:formData
+            })
+            .then((data)=>{
+                if(data.ok){
+                    return data.json();
+                }
+            })
+            .then((data)=>{
+                switch(data.state){
+                    case 'Incorrect password!':{
+                        alert(data.state);
+                        break;
+                    }
+                    case 'This player does not exist!':{
+                        alert(data.state);
+                        break;
+                    }
+                    case 'Request successful':{
+                        alert(data.key);
+                        window.sessionStorage.setItem('key', data.key);
+                        break;
+                    }
+                    default:{
+                        alert('Something went wrong!')
+                        break;
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>
